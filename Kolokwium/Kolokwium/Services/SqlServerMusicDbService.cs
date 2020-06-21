@@ -60,15 +60,23 @@ namespace Kolokwium.Services
 				LastName = request.LastName,
 				Nickname = request.NickName
 			};
-
 			_track = new Track {
 				TrackName = request.Track.TrackName,
 				Duration = request.Track.Duration
 			};
 
-			_context.MusicianTracks.AddRange(_musician.MusicianTracks);
-			_context.Tracks.Add(_track);
+
+			var _idMusician = _context.Musicians.Max(m => m.IdMusician);
+			var _idTrack = _context.Tracks.Max(m => m.IdTrack);
+
+			var _musicianTrack = new MusicianTrack {
+				IdTrack = _idTrack,
+				IdMusician = _idMusician
+			};
 			_context.Musicians.Add(_musician);
+			_context.Tracks.Add(_track);
+			//_context.MusicianTracks.Add(_musicianTrack);
+			_context.MusicianTracks.AddRange(_musicianTrack);
 			_context.SaveChanges();
 
 			return _musician;
